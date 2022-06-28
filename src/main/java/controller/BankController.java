@@ -30,4 +30,16 @@ public class BankController {
         }
         throw new Exception("User not found");
     }
+
+    public User findUserByAccountNumber(String accountNumber) throws Exception{
+        for (User currentUser : this.users){
+            if (currentUser.getAccountNumber().equals(accountNumber)){
+                return currentUser;
+            }
+        }
+
+        throw new Exception("User not found");
+    }
+
+
 }

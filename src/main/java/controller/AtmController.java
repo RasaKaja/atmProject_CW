@@ -8,13 +8,15 @@ import java.util.Date;
 
 public class AtmController {
 
-    private BankController bankController;
+    public BankController bankController;
 
     private UserCard activeCard;
     private boolean isValidated = false;
 
     public AtmController() {
     }
+
+    // another constructor for accepting the bank
 
     public AtmController(UserCard activeCard) {
         this.activeCard = activeCard;
@@ -24,12 +26,9 @@ public class AtmController {
         this.activeCard = userCard;
     }
 
-    public String validateCard(){
+    public String validateCard(int cardPin){
 
         try {
-            User currentUser = bankController.findUserByCardId(this.activeCard.getId());
-
-            int cardPin = Integer.parseInt(JOptionPane.showInputDialog("Welcome " + currentUser.getName() + ", please enter your PIN"));
             this.isValidated = this.activeCard.isPinValid(cardPin);
             if (!this.isValidated) return "Invalid PIN!";
         } catch (Exception e) {
@@ -43,17 +42,15 @@ public class AtmController {
         this.bankController = bankController;
     }
 
-    public String deposit(){
+    public String deposit(Double amountToDeposit){
         if (!isValidated) return "Please validate your card.";
-        double amountToDeposit = Double.parseDouble(JOptionPane.showInputDialog("Enter amount to deposit "));
         this.activeCard.setBalance(this.activeCard.getBalance() + amountToDeposit);
 
         return "Deposit successful, new balance is: " + this.activeCard.getBalance();
     }
 
-    public String withdraw(){
+    public String withdraw(Double amountToWithdraw){
         if (!isValidated) return "Please validate your card.";
-        double amountToWithdraw = Double.parseDouble(JOptionPane.showInputDialog("Enter amount to withdraw "));
 
         double currentBalance = this.activeCard.getBalance();
         if (currentBalance < amountToWithdraw) return "Not enough balance";
@@ -61,6 +58,11 @@ public class AtmController {
         this.activeCard.setBalance(currentBalance - amountToWithdraw);
 
         return "Withdraw successful, new balance " + this.activeCard.getBalance();
+    }
+
+    public String getUserBalance(){
+        if (!isValidated) return "Please validate your card";
+        return "Your current balance is " + this.activeCard.getBalance();
     }
 
     public String removeCard(){
